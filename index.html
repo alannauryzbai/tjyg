@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animation Workshop 1-15</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #2c3e50;
+            --accent: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f2f5;
+        }
+
+        /* Метка с номером задания */
+        .task-label {
+            background: #333;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        /* 13. ПРЕЛОАДЕР */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        /* 6. LOADER */
+        .loader-circle {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 12. ПАРАЛЛАКС ФОН */
+        .parallax-bg {
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1500&q=80');
+            height: 350px;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* 8. МЕНЮ */
+        nav {
+            background: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: 0; left: 0;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        nav a:hover::after { width: 100%; }
+
+        /* СЕТКА КОНТЕНТА */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .task-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* 1. ПЛАВНЫЙ ЦВЕТ */
+        .btn-transition {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.4s ease;
+        }
+        .btn-transition:hover { background: var(--secondary); }
+
+        /* 2. УВЕЛИЧЕНИЕ & 7. ПОЯВЛЕНИЕ */
+        .box-scale {
+            width: 150px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s;
+            animation: fadeInUp 1s ease backwards;
+        }
+        .box-scale:hover { transform: scale(1.1); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 3. ПОЯВЛЕНИЕ ТЕКСТА */
+        .hidden-text-box {
+            padding: 20px;
+            border: 2px dashed #ccc;
+        }
+        .hidden-text-box span {
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        .hidden-text-box:hover span { opacity: 1; }
+
+        /* 4. ДВИГАЮЩИЙСЯ КВАДРАТ */
+        .track { width: 100%; height: 50px; background: #eee; position: relative; border-radius: 25px; overflow: hidden;}
+        .square-move {
+            width: 50px; height: 50px;
+            background: var(--dark);
+            position: absolute;
+            animation: slide 2s infinite alternate ease-in-out;
+        }
+        @keyframes slide { from { left: 0; } to { left: calc(100% - 50px); } }
+
+        /* 5. ПУЛЬСАЦИЯ */
+        .btn-pulse {
+            width: 60px; height: 60px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { transform: scale(0.95); }
+        }
+
+        /* 9. RIPPLE */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+            padding: 15px 30px;
+            background: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .ripple {
+            position: absolute;
+            background: rgba(255,255,255,0.5);
+            transform: scale(0);
+            border-radius: 50%;
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+        /* 10. СЛАЙДЕР */
+        .slider-wrap {
+            width: 200px; height: 120px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .slides {
+            display: flex; width: 300%;
+            animation: sliderLoop 6s infinite;
+        }
+        .slide { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; color: white; }
+        @keyframes sliderLoop {
+            0%, 20% { transform: translateX(0); }
+            33%, 53% { transform: translateX(-33.33%); }
+            66%, 86% { transform: translateX(-66.66%); }
+        }
+
+        /* 11. БУРГЕР */
+        .burger {
+            width: 30px; height: 22px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            cursor: pointer;
+        }
+        .burger span { height: 3px; width: 100%; background: #333; transition: 0.3s; }
+        .burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .burger.active span:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+        /* 14. HOVER ИЗОБРАЖЕНИЙ */
+        .img-box {
+            width: 100%; height: 150px;
+            position: relative; overflow: hidden; border-radius: 8px;
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .img-box:hover img { transform: scale(1.1); filter: brightness(0.7); }
+        .img-overlay {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white; opacity: 0; transition: 0.5s;
+        }
+        .img-box:hover .img-overlay { opacity: 1; }
+
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <span class="task-label">№13 Прелоадер & №6 Лоадер</span>
+        <div class="loader-circle"></div>
+        <p>Загрузка сайта...</p>
+    </div>
+
+    <div class="parallax-bg">
+        <span class="task-label">№12 Параллакс эффект</span>
+        <h1>Мини-проект (№15)</h1>
+    </div>
+
+    <nav>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <span class="task-label">№11</span>
+            <div class="burger" onclick="this.classList.toggle('active')">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <span class="task-label">№8 Меню с анимацией</span>
+            <div>
+                <a href="#">Главная</a>
+                <a href="#">Услуги</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="task-card">
+            <span class="task-label">№1 Плавный цвет</span>
+            <button class="btn-transition">Наведи курсор</button>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№2 Увеличение & №7 Появление</span>
+            <div class="box-scale">Карточка</div>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№3 Появление текста</span>
+            <div class="hidden-text-box">
+                Наведи сюда: <span>Сюрприз!</span>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№4 Keyframes движение</span>
+            <div class="track">
+                <div class="square-move"></div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№5 Пульсация</span>
+            <button class="btn-pulse">GO</button>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№9 Ripple (Кликни!)</span>
+            <button class="btn-ripple" onclick="createRipple(event)">Нажми меня</button>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№10 Слайдер (CSS)</span>
+            <div class="slider-wrap">
+                <div class="slides">
+                    <div class="slide" style="background: #e67e22;">1</div>
+                    <div class="slide" style="background: #27ae60;">2</div>
+                    <div class="slide" style="background: #2980b9;">3</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <span class="task-label">№14 Hover изображений</span>
+            <div class="img-box">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80" alt="tech">
+                <div class="img-overlay">ТЕКСТ ПОВЕРХ</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // №13 Прелоадер
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('preloader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 2000);
+        });
+
+        // №9 Ripple эффект
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add("ripple");
+
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) { ripple.remove(); }
+            button.appendChild(circle);
+        }
+    </script>
+</body>
+</html>
